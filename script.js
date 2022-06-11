@@ -20,24 +20,39 @@ function updatePosition(clientX) {
 }
 
 function onStart(event) {
-  event.preventDefault();
-  dist.startX = event.clientX;
-  wrapper.addEventListener('mousemove', onMove);
+  let moveType;
+  if (event.type === 'mousedown') {
+    event.preventDefault();
+    dist.startX = event.clientX;
+    moveType = 'mousemove';
+  } else {
+    dist.startX = event.changedTouches[0].clientX;
+    moveType = 'touchmove';
+  }
+  wrapper.addEventListener(moveType, onMove);
   // console.log('entrou');
+  // console.log(event);
 }
 
 function onMove(event) {
-  const slidePosition = updatePosition(event.clientX);
+  const pointerEvents =
+    event.type === 'mousemove'
+      ? event.clientX
+      : event.changedTouches[0].clientX;
+  const slidePosition = updatePosition(pointerEvents);
   moveSlide(slidePosition);
-  // console.log(dist);
+  // console.log(event);
 }
 
 function onEnd(event) {
-  wrapper.removeEventListener('mousemove', onMove);
+  const moveType = event.type === 'mouseup' ? 'mousemove' : 'touchmove';
+  wrapper.removeEventListener(moveType, onMove);
   dist.finalPosition = dist.finalX;
-  console.log(dist);
+  // console.log(dist);
   // console.log('saiu');
 }
 
 wrapper.addEventListener('mousedown', onStart);
+wrapper.addEventListener('touchstart', onStart);
 wrapper.addEventListener('mouseup', onEnd);
+wrapper.addEventListener('touchend', onEnd);
