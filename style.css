@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700&display=swap');
+
+img{
+  display: block;
+  max-width: 100%;
+}
+
+.main{
+  display: grid;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 50px;
+  overflow: hidden;
+}
+
+h1{
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 50px;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+h1 span{
+  font-weight: 300;
+}
+
+.slide{
+  display: flex;
+  gap: 30px;
+}
+
+.slide div{
+  flex: 1 0 700px;
+}
+
+@media screen and (max-width:600px) {
+  .main{
+    padding: 0 20px;
+  }
+  .slide div{
+    flex-basis: 300px;
+  }
+  h1{
+    max-width: 15ch;
+  }
+}
