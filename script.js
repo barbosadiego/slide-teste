@@ -52,7 +52,40 @@ function onEnd(event) {
   // console.log('saiu');
 }
 
+//Slides config
+
+function slidePosition(slide) {
+  const margin = (document.body.offsetWidth - slide.offsetWidth) / 2;
+  return -(slide.offsetLeft - margin);
+}
+
+function slidesConfig() {
+  const slideArray = [...slides.children].map((element) => {
+    const position = slidePosition(element);
+    return { position, element };
+  });
+  return slideArray;
+}
+
+function slideIndexNav(index) {
+  const last = slidesConfig().length - 1;
+  return {
+    next: index === last ? undefined : index + 1,
+    active: index,
+    previous: index ? index - 1 : undefined,
+  };
+}
+
+function changeSlide(index) {
+  const activeSlide = slidesConfig()[index];
+  moveSlide(activeSlide.position);
+  slideIndexNav(index);
+  dist.finalPosition = activeSlide.position;
+}
+
 wrapper.addEventListener('mousedown', onStart);
 wrapper.addEventListener('touchstart', onStart);
 wrapper.addEventListener('mouseup', onEnd);
 wrapper.addEventListener('touchend', onEnd);
+
+changeSlide(3);
