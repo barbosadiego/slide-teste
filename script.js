@@ -2,12 +2,17 @@
 
 const wrapper = document.querySelector('.js-wrapper');
 const slides = document.querySelector('.js-slide');
+let indexSlides = {};
 const dist = {
   startX: 0,
   finalX: 0,
   moviment: 0,
   finalPosition: 0,
 };
+
+function activeTransition(active){
+  slides.style.transition = active ? "transform .3s" : ""
+}
 
 function moveSlide(moviment) {
   dist.finalX = moviment;
@@ -30,8 +35,6 @@ function onStart(event) {
     moveType = 'touchmove';
   }
   wrapper.addEventListener(moveType, onMove);
-  // console.log('entrou');
-  // console.log(event);
 }
 
 function onMove(event) {
@@ -40,16 +43,16 @@ function onMove(event) {
       ? event.clientX
       : event.changedTouches[0].clientX;
   const slidePosition = updatePosition(pointerEvents);
+  activeTransition(false)
   moveSlide(slidePosition);
-  // console.log(event);
 }
 
 function onEnd(event) {
   const moveType = event.type === 'mouseup' ? 'mousemove' : 'touchmove';
   wrapper.removeEventListener(moveType, onMove);
   dist.finalPosition = dist.finalX;
-  // console.log(dist);
-  // console.log('saiu');
+  activeTransition(true)
+  changeOnMoveSlide();
 }
 
 //Slides config
@@ -69,11 +72,12 @@ function slidesConfig() {
 
 function slideIndexNav(index) {
   const last = slidesConfig().length - 1;
-  return {
+  indexSlides = {
     next: index === last ? undefined : index + 1,
     active: index,
     previous: index ? index - 1 : undefined,
   };
+  return indexSlides;
 }
 
 function changeSlide(index) {
@@ -83,9 +87,31 @@ function changeSlide(index) {
   dist.finalPosition = activeSlide.position;
 }
 
+//slide next and prev
+//define o slide ativo no momento
+
+function nextSlide() {
+  if (indexSlides.next !== undefined) changeSlide(indexSlides.next);
+}
+
+function prevSlide() {
+  if (indexSlides.previous !== undefined) changeSlide(indexSlides.previous);
+}
+
+function changeOnMoveSlide() {
+  console.log(indexSlides);
+  if (dist.moviment > 120 && indexSlides.next !== undefined) {
+    nextSlide();
+  } else if (dist.moviment < -120 && indexSlides.previous !== undefined) {
+    prevSlide();
+  } else {
+    changeSlide(indexSlides.active);
+  }
+}
+
 wrapper.addEventListener('mousedown', onStart);
 wrapper.addEventListener('touchstart', onStart);
 wrapper.addEventListener('mouseup', onEnd);
 wrapper.addEventListener('touchend', onEnd);
 
-changeSlide(3);
+changeSlide(0);
