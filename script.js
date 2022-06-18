@@ -11,8 +11,8 @@ const dist = {
 };
 
 //ativa ou não a propriedade transition no style dos slides
-function activeTransition(active){
-  slides.style.transition = active ? "transform .3s" : ""
+function activeTransition(active) {
+  slides.style.transition = active ? 'transform .3s' : '';
 }
 
 //move os slides
@@ -27,7 +27,7 @@ function updatePosition(clientX) {
   return dist.finalPosition - dist.moviment;
 }
 
-//quanto o click do mouse (ou toque na tela) é acionado 
+//quanto o click do mouse (ou toque na tela) é acionado
 //define o valor de startX e o tipo de evento
 //e adiciona o onMove
 function onStart(event) {
@@ -53,10 +53,9 @@ function onMove(event) {
       ? event.clientX
       : event.changedTouches[0].clientX;
   const slidePosition = updatePosition(pointerEvents);
-  activeTransition(false)
+  activeTransition(false);
   moveSlide(slidePosition);
 }
-
 
 //quando o clique do mouse é encerrado define o tipo de evento
 //remove o Event Listener de acordo com o tipo
@@ -66,8 +65,27 @@ function onEnd(event) {
   const moveType = event.type === 'mouseup' ? 'mousemove' : 'touchmove';
   wrapper.removeEventListener(moveType, onMove);
   dist.finalPosition = dist.finalX;
-  activeTransition(true)
+  activeTransition(true);
   changeActiveSlide();
+  addActiveClass();
+}
+
+//redimensionar os slides quando ocorrer o evento 'resize' após 1s
+function onResize() {
+  setTimeout(() => {
+    slidesConfig();
+    changeSlide(indexSlides.active);
+    console.log('ok');
+  }, 1000);
+}
+
+//debounce onResize
+function debounce(func, wait) {
+  let timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(func, wait);
+  };
 }
 
 //Slides config
@@ -104,6 +122,8 @@ function changeSlide(index) {
   moveSlide(activeSlide.position);
   slideIndexNav(index);
   dist.finalPosition = activeSlide.position;
+  //adicionando a classe 'active'
+  slidesConfig()[index].element.classList.add('active');
 }
 
 //slide next and prev
@@ -127,11 +147,18 @@ function changeActiveSlide() {
   }
 }
 
+//adicionar a classe 'active' para o item do slide que estiver ativo
+function addActiveClass() {
+  slidesConfig().forEach((item) => item.element.classList.remove('active'));
+  slidesConfig()[indexSlides.active].element.classList.add('active');
+}
+
 //eventos
 wrapper.addEventListener('mousedown', onStart);
 wrapper.addEventListener('touchstart', onStart);
 wrapper.addEventListener('mouseup', onEnd);
 wrapper.addEventListener('touchend', onEnd);
+window.addEventListener('resize', debounce(onResize, 50));
 
 //definição de qual item será o ativo por padrão
 changeSlide(0);

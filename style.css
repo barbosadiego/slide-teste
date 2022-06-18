@@ -42,6 +42,17 @@ h1 span {
 
 .slide div {
   flex: 1 0 700px;
+  transform: scale(.8);
+  transition: .3s;
+  border-radius: 4px;
+  opacity: .8;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.slide div.active{
+  transform: scale(1);
+  opacity: 1;
 }
 
 @media screen and (max-width: 600px) {
