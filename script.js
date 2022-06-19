@@ -67,7 +67,6 @@ function onEnd(event) {
   dist.finalPosition = dist.finalX;
   activeTransition(true);
   changeActiveSlide();
-  addActiveClass();
 }
 
 //redimensionar os slides quando ocorrer o evento 'resize' após 1s
@@ -75,7 +74,6 @@ function onResize() {
   setTimeout(() => {
     slidesConfig();
     changeSlide(indexSlides.active);
-    console.log('ok');
   }, 1000);
 }
 
@@ -123,17 +121,21 @@ function changeSlide(index) {
   slideIndexNav(index);
   dist.finalPosition = activeSlide.position;
   //adicionando a classe 'active'
+  slidesConfig().forEach((item) => item.element.classList.remove('active'));
   slidesConfig()[index].element.classList.add('active');
 }
 
 //slide next and prev
 //define o slide ativo no momento em que ocorre um movimento
 function nextSlide() {
+  activeTransition(true)
   if (indexSlides.next !== undefined) changeSlide(indexSlides.next);
 }
 
 function prevSlide() {
+  activeTransition(true)
   if (indexSlides.previous !== undefined) changeSlide(indexSlides.previous);
+
 }
 
 //muda o slide ativo
@@ -147,11 +149,12 @@ function changeActiveSlide() {
   }
 }
 
-//adicionar a classe 'active' para o item do slide que estiver ativo
-function addActiveClass() {
-  slidesConfig().forEach((item) => item.element.classList.remove('active'));
-  slidesConfig()[indexSlides.active].element.classList.add('active');
-}
+//botões de navegação
+const next = document.querySelector('.next');
+const prev = document.querySelector('.previous');
+
+next.addEventListener('click', nextSlide)
+prev.addEventListener('click', prevSlide)
 
 //eventos
 wrapper.addEventListener('mousedown', onStart);
@@ -161,4 +164,4 @@ wrapper.addEventListener('touchend', onEnd);
 window.addEventListener('resize', debounce(onResize, 50));
 
 //definição de qual item será o ativo por padrão
-changeSlide(0);
+changeSlide(1);
