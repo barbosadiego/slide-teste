@@ -87,6 +87,31 @@ h1 span {
   box-shadow: 0px 0px 0px 3px rgba(136, 68, 238, .5);
 }
 
+[data-control='slide']{
+  list-style: none;
+  display: flex;
+  padding: 0px;
+  justify-content: center;
+  gap: 20px;
+}
+
+[data-control='slide'] li a{
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #84e;
+  text-indent: -999px;
+  overflow: hidden;
+  transition: .3s;
+}
+
+[data-control='slide'] li a:hover,
+[data-control='slide'] li.active a{
+  background-color: rgba(136, 68, 238, 0.5);
+  box-shadow: 0px 0px 0px 3px rgba(136, 68, 238, 1);
+}
+
 @media screen and (max-width: 600px) {
   .slide div {
     flex-basis: 300px;

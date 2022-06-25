@@ -123,6 +123,7 @@ function changeSlide(index) {
   //adicionando a classe 'active'
   slidesConfig().forEach((item) => item.element.classList.remove('active'));
   slidesConfig()[index].element.classList.add('active');
+  addActiveClass(index)
 }
 
 //slide next and prev
@@ -155,6 +156,35 @@ const prev = document.querySelector('.previous');
 
 next.addEventListener('click', nextSlide)
 prev.addEventListener('click', prevSlide)
+
+//esta função cria os pontos de navegação
+function dotCreate(){
+  const ul = document.createElement('ul');
+  ul.dataset.control = 'slide';
+  slidesConfig().forEach((item, index) => {
+    ul.innerHTML += `<li><a href="#slide${index + 1}">${index + 1}</a></li>`;
+  });
+  wrapper.appendChild(ul)
+  return ul
+}
+
+//aciona o slide de acordo com o index
+const dotsNav = dotCreate();
+const dotsArray = [...dotsNav.children];
+dotsArray.forEach((item, index) => {
+  item.addEventListener('click', (event) => {
+    event.preventDefault()
+    changeSlide(index)
+    addActiveClass(index)
+  })
+})
+
+//adiciona a classe 'active'
+function addActiveClass(index){
+  dotsArray.forEach(item => item.classList.remove('active'));
+  dotsArray[index].classList.add('active')
+}
+
 
 //eventos
 wrapper.addEventListener('mousedown', onStart);
